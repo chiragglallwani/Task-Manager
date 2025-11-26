@@ -31,7 +31,6 @@ export const registerService = async (
   role: Role
 ) => {
   try {
-    console.log(email, password, role);
     const response = await api.post<APIResponse<LoginResponse>>(
       "/auth/register",
       {
