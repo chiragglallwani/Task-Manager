@@ -34,7 +34,7 @@ export const getAllTasksController = async (req: Request, res: Response) => {
     const id = req.user?.id as string;
     const userRole = req.user?.role as Role;
     if (userRole === "admin") {
-      const tasks = await TaskModel.find();
+      const tasks = await TaskModel.find().populate("userId", "email");
       return res.status(200).json({
         success: true,
         message: "Tasks fetched successfully",
