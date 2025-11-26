@@ -161,7 +161,7 @@ export const TaskManage = () => {
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-xl md:text-2xl">My Tasks</CardTitle>
           <Button onClick={openCreateDialog} size="sm">
-            <Plus className="h-4 w-4 mr-2" />
+            <Plus className="h-4 w-4" />
             Create Task
           </Button>
         </CardHeader>

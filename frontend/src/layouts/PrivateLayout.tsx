@@ -8,8 +8,8 @@ export const PrivateLayout = ({ children }: { children: React.ReactNode }) => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen dark:bg-gray-900 bg-white flex items-center justify-center">
-        <div className="text-center">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center text-foreground">Loading...</div>
       </div>
     );
   }
@@ -18,7 +18,7 @@ export const PrivateLayout = ({ children }: { children: React.ReactNode }) => {
     return <Navigate to="/signin" />;
   }
   return (
-    <div className="min-h-screen dark:bg-gray-900 bg-white flex w-full">
+    <div className="min-h-screen flex w-full">
       <Navbar />
       <main className="w-full flex-1">
         <SidebarTrigger />

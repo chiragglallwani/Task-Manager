@@ -58,6 +58,7 @@ export const Signup = () => {
               placeholder="********"
               name="password"
               control={form.control}
+              isPasswordType
             />
             <SelectForm
               label="Role"

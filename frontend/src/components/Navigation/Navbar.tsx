@@ -64,9 +64,9 @@ export const Navbar = () => {
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
-        <SidebarContent className="flex flex-col gap-2 bg-gray-100 p-2 rounded-md">
-          <p className="text-sm text-gray-500">Hello, {user?.email}</p>
-          <p className="text-sm text-gray-500">Role: {user?.role}</p>
+        <SidebarContent className="flex flex-col gap-2 bg-muted p-2 rounded-md">
+          <p className="text-sm text-muted-foreground">Hello, {user?.email}</p>
+          <p className="text-sm text-muted-foreground">Role: {user?.role}</p>
         </SidebarContent>
         <SidebarMenuButton
           className="hover:cursor-pointer"

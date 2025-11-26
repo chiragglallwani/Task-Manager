@@ -53,6 +53,7 @@ export const Login = () => {
               placeholder="********"
               name="password"
               control={form.control}
+              isPasswordType
             />
             {message && <p className="text-red-500">{message}</p>}
             <div className="flex justify-end gap-2">
