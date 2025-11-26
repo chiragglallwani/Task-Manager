@@ -25,15 +25,26 @@ app.use("/api/tasks", taskRoutes);
 
 const connectDB = async () => {
   try {
+    if (mongoose.connection.readyState === 1) {
+      return;
+    }
     await mongoose.connect(process.env.MONGODB_URI as string);
     console.log("Connected to MongoDB");
   } catch (error) {
-    console.error(error);
-    process.exit(1);
+    console.error("MongoDB connection error:", error);
+    throw error;
   }
 };
 
-app.listen(process.env.PORT, async () => {
-  await connectDB();
-  console.log(`Server is running on port ${process.env.PORT}`);
+connectDB().catch((error) => {
+  console.error("Failed to connect to MongoDB:", error);
 });
+
+if (process.env.VERCEL !== "1") {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
+
+export default app;
