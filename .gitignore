@@ -12,6 +12,12 @@ frontend/dist
 frontend/dist-ssr
 frontend/*.local
 frontend/.env
+
+backend/node_modules
+backend/dist
+backend/dist-ssr
+backend/*.local
+backend/.env
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
