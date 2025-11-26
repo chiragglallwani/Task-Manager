@@ -1,8 +1,13 @@
 import * as argon2 from "argon2";
 import * as jwt from "jsonwebtoken";
-import type { Request, Response } from "express";
+import type { CookieOptions, Request, Response } from "express";
 import { UserModel } from "../models/User";
-import { generateAccessToken, generateRefreshToken } from "../utils/helper";
+import {
+  COOKIE_OPTIONS_ACCESS_TOKEN,
+  COOKIE_OPTIONS_REFRESH_TOKEN,
+  generateAccessToken,
+  generateRefreshToken,
+} from "../utils/helper";
 
 export const loginController = async (req: Request, res: Response) => {
   try {
@@ -31,16 +36,8 @@ export const loginController = async (req: Request, res: Response) => {
       user.role
     );
 
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
-    res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      secure: true,
-      maxAge: 15 * 60 * 1000,
-    });
+    res.cookie("refreshToken", refreshToken, COOKIE_OPTIONS_REFRESH_TOKEN);
+    res.cookie("accessToken", accessToken, COOKIE_OPTIONS_ACCESS_TOKEN);
     res.json({
       success: true,
       message: "Login successful",
@@ -88,16 +85,8 @@ export const registerController = async (req: Request, res: Response) => {
       newUser.email,
       newUser.role
     );
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
-    res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      secure: true,
-      maxAge: 15 * 60 * 1000,
-    });
+    res.cookie("refreshToken", refreshToken, COOKIE_OPTIONS_REFRESH_TOKEN);
+    res.cookie("accessToken", accessToken, COOKIE_OPTIONS_ACCESS_TOKEN);
     res.json({
       success: true,
       message: "User created successfully",
@@ -124,6 +113,7 @@ export const refreshTokenController = async (req: Request, res: Response) => {
   try {
     const { refreshToken } = req.cookies;
     if (!refreshToken) {
+      console.log("No refresh token found");
       return res.status(401).json({ message: "Unauthorized" });
     }
     const decoded = jwt.verify(
@@ -139,11 +129,7 @@ export const refreshTokenController = async (req: Request, res: Response) => {
       user.email,
       user.role
     );
-    res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      secure: true,
-      maxAge: 15 * 60 * 1000,
-    });
+    res.cookie("accessToken", accessToken, COOKIE_OPTIONS_ACCESS_TOKEN);
     res.json({
       success: true,
       message: "Token refreshed successfully",
