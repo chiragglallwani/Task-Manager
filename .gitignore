@@ -18,6 +18,11 @@ backend/dist
 backend/dist-ssr
 backend/*.local
 backend/.env
+# Compiled TypeScript files in src (shouldn't be here, but ignore just in case)
+backend/src/**/*.js
+backend/src/**/*.js.map
+backend/src/**/*.d.ts
+backend/src/**/*.d.ts.map
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

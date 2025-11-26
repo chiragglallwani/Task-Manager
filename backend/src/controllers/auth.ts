@@ -129,10 +129,7 @@ export const refreshTokenController = async (req: Request, res: Response) => {
     const decoded = jwt.verify(
       refreshToken,
       process.env.REFRESH_TOKEN_SECRET as string
-    );
-    if (!decoded) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
+    ) as jwt.JwtPayload;
     const user = await UserModel.findById({ _id: decoded.id as string });
     if (!user) {
       return res.status(401).json({ message: "Unauthorized" });
