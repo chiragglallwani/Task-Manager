@@ -4,7 +4,7 @@ export const RegisterSchema = z.object({
   email: z.string().email("Invalid email address").min(1, "Email is required"),
   password: z
     .string()
-    .min(8, "Password is required")
+    .min(8, "Password should be minimum 8 characters long")
     .regex(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
       "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character"
