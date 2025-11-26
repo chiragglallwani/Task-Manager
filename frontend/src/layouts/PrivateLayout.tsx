@@ -4,10 +4,19 @@ import { useAuth } from "@/hooks/useAuth";
 import { Navigate } from "react-router-dom";
 
 export const PrivateLayout = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated } = useAuth();
-  // if (!isAuthenticated) {
-  //   return <Navigate to="/signin" />;
-  // }
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen dark:bg-gray-900 bg-white flex items-center justify-center">
+        <div className="text-center">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/signin" />;
+  }
   return (
     <div className="min-h-screen dark:bg-gray-900 bg-white flex w-full">
       <Navbar />

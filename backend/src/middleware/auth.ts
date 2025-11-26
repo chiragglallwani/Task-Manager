@@ -24,7 +24,7 @@ export const authMiddleware = async (
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (err, user) => {
     if (err) {
-      return res.status(401).json({ message: "Unauthorized" });
+      return res.status(403).json({ message: "Unauthorized" });
     }
     req.user = user as { id: string; email: string; role: Role };
     next();

@@ -1,5 +1,5 @@
 import { api } from "@/api/api";
-import type { APIResponse, LoginResponse } from "@/types/types";
+import type { APIResponse, LoginResponse, Role } from "@/types/types";
 import { AxiosError } from "axios";
 
 export const loginService = async (email: string, password: string) => {
@@ -25,13 +25,19 @@ export const loginService = async (email: string, password: string) => {
   }
 };
 
-export const registerService = async (email: string, password: string) => {
+export const registerService = async (
+  email: string,
+  password: string,
+  role: Role
+) => {
   try {
+    console.log(email, password, role);
     const response = await api.post<APIResponse<LoginResponse>>(
       "/auth/register",
       {
         email,
         password,
+        role,
       }
     );
     return {

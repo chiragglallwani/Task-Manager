@@ -19,7 +19,7 @@ import {
 
 export const Navbar = () => {
   const { pathname } = useLocation();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const { open } = useSidebar();
   const items = [
     {
@@ -64,6 +64,10 @@ export const Navbar = () => {
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
+        <SidebarContent className="flex flex-col gap-2 bg-gray-100 p-2 rounded-md">
+          <p className="text-sm text-gray-500">Hello, {user?.email}</p>
+          <p className="text-sm text-gray-500">Role: {user?.role}</p>
+        </SidebarContent>
         <SidebarMenuButton
           className="hover:cursor-pointer"
           onClick={() => logout()}

@@ -150,7 +150,10 @@ export const refreshTokenController = async (req: Request, res: Response) => {
     res.json({
       success: true,
       message: "Token refreshed successfully",
-      data: { accessToken },
+      data: {
+        accessToken,
+        user: { id: user._id.toString(), email: user.email, role: user.role },
+      },
     });
   } catch (error) {
     console.error(error);
@@ -173,23 +176,5 @@ export const logoutController = async (req: Request, res: Response) => {
     res.json({ success: true, message: "Logged out successfully" });
   } catch (error) {
     console.error(error);
-  }
-};
-
-export const getUserController = async (req: Request, res: Response) => {
-  try {
-    const user = await UserModel.findById(req.user.id);
-    res.json({
-      success: true,
-      message: "User fetched successfully",
-      data: { user, accessToken: req.cookies.accessToken },
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      error: "An unknown error occurred",
-    });
   }
 };

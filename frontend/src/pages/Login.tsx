@@ -8,12 +8,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Form } from "@/components/ui/form";
 import { InputForm } from "@/components/forms/InputForm";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Login = () => {
+  const { login, message } = useAuth();
+  const navigate = useNavigate();
   const form = useForm<LoginSchemaType>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -22,8 +25,11 @@ export const Login = () => {
     },
   });
 
-  const onSubmit = (data: LoginSchemaType) => {
-    console.log(data);
+  const onSubmit = async (data: LoginSchemaType) => {
+    const response = await login(data.email, data.password);
+    if (response) {
+      navigate("/");
+    }
   };
 
   return (
@@ -48,6 +54,7 @@ export const Login = () => {
               name="password"
               control={form.control}
             />
+            {message && <p className="text-red-500">{message}</p>}
             <div className="flex justify-end gap-2">
               <Button
                 type="button"

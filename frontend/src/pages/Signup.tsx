@@ -8,13 +8,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Form } from "@/components/ui/form";
 import { InputForm } from "@/components/forms/InputForm";
 import { Button } from "@/components/ui/button";
 import { SelectForm } from "@/components/forms/SelectForm";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Signup = () => {
+  const { register, message } = useAuth();
+  const navigate = useNavigate();
   const form = useForm<RegisterSchemaType>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
@@ -24,8 +27,11 @@ export const Signup = () => {
     },
   });
 
-  const handleSubmit = (data: RegisterSchemaType) => {
-    console.log(data);
+  const handleSubmit = async (data: RegisterSchemaType) => {
+    const response = await register(data.email, data.password, data.role);
+    if (response) {
+      navigate("/");
+    }
   };
 
   return (
@@ -63,6 +69,7 @@ export const Signup = () => {
                 { value: "admin", label: "Admin" },
               ]}
             />
+            {message && <p className="text-red-500">{message}</p>}
             <div className="flex justify-end gap-2">
               <Button
                 type="button"
