@@ -14,10 +14,13 @@ import { InputForm } from "@/components/forms/InputForm";
 import { Button } from "@/components/ui/button";
 import { SelectForm } from "@/components/forms/SelectForm";
 import { useAuth } from "@/hooks/useAuth";
+import { useTransition } from "react";
+import { LoaderIcon } from "lucide-react";
 
 export const Signup = () => {
   const { register, message } = useAuth();
   const navigate = useNavigate();
+  const [pending, startTransition] = useTransition();
   const form = useForm<RegisterSchemaType>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
@@ -28,10 +31,12 @@ export const Signup = () => {
   });
 
   const handleSubmit = async (data: RegisterSchemaType) => {
-    const response = await register(data.email, data.password, data.role);
-    if (response) {
-      navigate("/");
-    }
+    startTransition(async () => {
+      const response = await register(data.email, data.password, data.role);
+      if (response) {
+        navigate("/");
+      }
+    });
   };
 
   return (
@@ -79,7 +84,13 @@ export const Signup = () => {
               >
                 Reset
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button disabled={pending} type="submit">
+                {pending ? (
+                  <LoaderIcon className="w-4 h-4 animate-spin text-secondary-foreground" />
+                ) : (
+                  "Submit"
+                )}
+              </Button>
             </div>
           </form>
         </Form>

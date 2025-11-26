@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -31,7 +31,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus } from "lucide-react";
+import { LoaderIcon, Plus } from "lucide-react";
 
 const TaskFormSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -45,9 +45,9 @@ export const TaskManage = () => {
   const { user } = useAuth();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
+  const [pending, startTransition] = useTransition();
 
   const form = useForm<TaskFormValues>({
     resolver: zodResolver(TaskFormSchema),
@@ -130,28 +130,27 @@ export const TaskManage = () => {
 
   const onSubmit = async (data: TaskFormValues) => {
     try {
-      setSubmitting(true);
-      const taskData: TaskFormData = {
-        ...data,
-        createdAt: editingTaskId ? undefined : new Date(),
-      };
+      startTransition(async () => {
+        const taskData: TaskFormData = {
+          ...data,
+          createdAt: editingTaskId ? undefined : new Date(),
+        };
 
-      let response;
-      if (editingTaskId) {
-        response = await updateTaskService(editingTaskId, taskData);
-      } else {
-        response = await createTaskService(taskData);
-      }
+        let response;
+        if (editingTaskId) {
+          response = await updateTaskService(editingTaskId, taskData);
+        } else {
+          response = await createTaskService(taskData);
+        }
 
-      if (response?.success) {
-        form.reset();
-        closeDialog();
-        await fetchTasks();
-      }
+        if (response?.success) {
+          form.reset();
+          closeDialog();
+          await fetchTasks();
+        }
+      });
     } catch (error) {
       console.error("Error saving task:", error);
-    } finally {
-      setSubmitting(false);
     }
   };
 
@@ -284,16 +283,18 @@ export const TaskManage = () => {
                   type="button"
                   variant="outline"
                   onClick={closeDialog}
-                  disabled={submitting}
+                  disabled={pending}
                 >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={submitting}>
-                  {submitting
-                    ? "Saving..."
-                    : editingTaskId
-                    ? "Update Task"
-                    : "Create Task"}
+                <Button type="submit" disabled={pending}>
+                  {pending ? (
+                    <LoaderIcon className="w-4 h-4 animate-spin text-secondary-foreground" />
+                  ) : editingTaskId ? (
+                    "Update Task"
+                  ) : (
+                    "Create Task"
+                  )}
                 </Button>
               </DialogFooter>
             </form>
